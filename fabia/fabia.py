@@ -22,6 +22,85 @@ from ._fabia import fit_fabia
 
 
 class FabiaBiclustering(BaseEstimator, BiclusterMixin):
+    """FABIA bicluster algorithm (Hochreiter et al., 2010).
+
+    Decomposes the matrix `X` into a linear combination of `K` biclusters.
+    For each bicluster `k`, it finds a row vector `l_k` how strongly each
+    feature participates in each bicluster, and a column vector `z_k`
+    that stores how strongly each datapoint participates in it.
+
+    Thus, the matrix  `X` can be factorized into `Z*L`,
+    where the `l_k` are the rows of `L` and the `z_k` are the columns of `Z`.
+
+    Suports sparse matrices.
+
+
+    Parameters
+    ----------
+    n_clusters : integer, optional, default: 3
+        The number of biclusters to find.
+
+    n_iter : integer, optional, default: 500
+        The number of iterations that the algorithm will run for.
+
+    alpha : float, optional, default: 0.01
+        sparseness parameter of the loadings `l_k`, must be in [0, 1].
+        The higher alpha, the sparser `l_k` will be.
+
+    spz: float, optional, default: 0.5
+        sparseness parameter of the `z_k`, must be in [0.5, 2]. The higher
+        spz, the sparser `z_k` will be.
+
+    spl: float, optional, default: 0.0
+        sparseness on the prior of `l_k`, must be in [0.0, 2]. The higher
+        spl, the sparser `l_k` will be. Normally it's safe to just leave
+        this at its default value.
+
+    eps: float, optional, default: 1e-3
+        Entries in `l_k` / `z_k` smaller than eps will be considered as 0.
+        A high eps thus acts as a regularizer that enforces sparsity.
+
+    thresZ: float, optional, default: 0.5
+        Thresold for when a sample belongs to a bicluster. Entries with
+        `|z_k|` < thresZ will not be considered as part of the bicluster when
+        calculating the row_ and columns_ parameters.
+
+    rescale_l : bool, optional, default=False
+        When set to True, the loadings in `l_k` will be rescaled to have
+        unit variance after each iteration of the algorithm. This can
+        sometimes help convergence.
+
+     random_state : int seed, RandomState instance, or None (default)
+        A pseudo random number generator used by the K-Means
+        initialization.
+
+    Attributes
+    ----------
+    `L_`: array, shape = [k, n_features]
+        Weights of each feature in each bicluster (factor loadings).
+        Available only after calling ``fit``.
+
+    `Z_`: array, shape = [n_samples, k]
+        Weights of each sample in each bicluster (factor weights).
+        Available only after calling ``fit``.
+
+    `Psi_`: array, shape = [n_features]
+        Estimated noise-parameter of each feature.
+        Available only after calling ``fit``.
+
+   `lapla_`: array, shape = [n_features, k]
+       Variational parameters
+       Available only after calling ``fit``.
+
+
+    References
+    ----------
+
+    * Hochreiter, Bodenhofer, et. al., 2010. `FABIA: factor analysis
+      for bicluster acquisition
+      <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2881408/>`__.
+
+    """
     def __init__(self, n_clusters=5, n_iter=500, alpha=0.01,
                  scale=True, spz=0.5, spl=0.0, eps=1e-3, thresZ=0.5,
                  rescale_l=False, random_state=None):
