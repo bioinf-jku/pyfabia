@@ -166,7 +166,14 @@ class FabiaBiclustering(BaseEstimator, BiclusterMixin):
             #XX = X.var(0)
             XX = (X ** 2).sum(0) / n
         XX[XX < self.eps] = self.eps
+        XX = XX.astype(X.dtype)
         sum2 = np.eye(k, k, dtype=X.dtype)
+
+        self.eps = X.dtype.type(self.eps)
+        self.alpha = X.dtype.type(self.alpha)
+        self.spl = X.dtype.type(self.spl)
+        self.spz = X.dtype.type(self.spz)
+        self._min_lap = X.dtype.type(self._min_lap)
 
         (L, Z, Psi, lapla) = fit_fabia(X, L, Z, Psi, lapla, XX, sum2,
                                        self.eps, self.n_iter, self.alpha,
