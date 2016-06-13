@@ -4,6 +4,7 @@ Author : Thomas Unterthiner
 License: GPL v2
 
 """
+
 from __future__ import division, absolute_import, print_function
 
 import numpy as np
@@ -142,7 +143,7 @@ class FabiaBiclustering(BaseEstimator, BiclusterMixin):
         if issparse(X) and self.scale:
             raise ValueError("Cannot scale sparse matrices.")
 
-        X = check_array(X, accept_sparse=['csr', 'csc'])
+        X = check_array(X, accept_sparse=['csr','csc'], order='C')
         if self.scale:
             self.scaler_ = StandardScaler()
             X = self.scaler_.fit_transform(X)
