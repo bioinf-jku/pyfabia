@@ -6,7 +6,7 @@ from Cython.Build import cythonize
 from codecs import open
 from os import path
 import numpy as np
-VERSION = '2015.9'
+VERSION = '2016.6'
 
 
 # Get the long description from the relevant file
