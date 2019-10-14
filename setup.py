@@ -48,7 +48,8 @@ setup(
 
     packages=['fabia'],
     #ext_modules = cythonize([Extension("fabia._fabia", ["fabia/_fabia.pyx"], include_dirs=[np.get_include()],)]),
-    ext_modules = [Extension("fabia._fabia", ["fabia/_fabia.c"])],
+    ext_modules = [Extension("fabia._fabia", ["fabia/_fabia.c"],
+                             include_dirs=[np.get_include()])],
 
     install_requires=["scipy>=0.16.0", "scikit-learn>=0.16.1"],
 )
